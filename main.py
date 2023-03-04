@@ -1,6 +1,6 @@
 import random
 
-
+# Class済み
 def display(board):
     # print(board, sep='\n')
     for i in board:
@@ -11,7 +11,8 @@ def input_rock(player):
     input_rock = list(map(int,input(f"あなたは{player}です、石を置きたい場所を指定して下さい").split()))
     return input_rock
 
-def count_reversible_rock(board,X,Y,player):
+# 長い
+def count_reversible_rock(board, X, Y, player):
     #入力の周りを判定
     reverse_p = []
     for i in range(-1,2):
@@ -46,15 +47,16 @@ def count_reversible_rock(board,X,Y,player):
 
     return reverse_p
 
+# 長い
 def count_put_able_spots(board, player):
     count_reversible_rock_list = []
     for l in range(0,8):
         for m in range(0,8):
-            if len(count_reversible_rock(board,l,m,player)) > 0:
+            if len(count_reversible_rock(board, l, m, player)) > 0:
                 count_reversible_rock_list.append(count_reversible_rock(board,l,m,player))
     return len(count_reversible_rock_list)
 
-
+#Class済み
 def init_board():
     board = []
     for _ in range(8):
@@ -80,11 +82,13 @@ def change_player(player):
      player = -player
      return player
 
-def revers_rocks(reversible_rocks,board):
+
+def reverse_rocks(reversible_rocks,board):
     for i in reversible_rocks:
         board[i[0]][i[1]] *= -1
     return board
 
+# Class済み
 def count_0s_on_board(board):
     count0 = 0
     for i in board:
@@ -93,6 +97,7 @@ def count_0s_on_board(board):
                 count0 += 1
     return count0
 
+# Class済み
 def winner_judge(board):
     one_count = 0
     minus_one_count = 0
@@ -103,9 +108,6 @@ def winner_judge(board):
             elif (j == -1):
                 minus_one_count += 1
     
-    print(f"one_count:{one_count}")
-    print(f"minus_one_count:{minus_one_count}")
-
     if one_count > minus_one_count:
         return 1
     elif minus_one_count > one_count:
@@ -144,7 +146,7 @@ def main():
                 board[X][Y] = player
 
                 #盤面を反転
-                board = revers_rocks(reversible_rocks,board)
+                board = reverse_rocks(reversible_rocks,board)
                 
                 #プレイヤー交代
                 player = change_player(player)

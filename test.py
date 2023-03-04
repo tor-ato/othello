@@ -1,3 +1,10 @@
-import random
-random_num = random.randint(0,1)
-print(random_num)
+from board import Board
+
+def test_board_count_zeros():
+    board = Board()
+    expected = 60
+    actual = board.count_zeros()
+    assert expected == actual
+
+def test_hoge():
+    assert 100 == 100
