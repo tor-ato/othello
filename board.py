@@ -1,4 +1,5 @@
 
+
 class Board:
     def __init__(self):
         self.values = []
@@ -9,6 +10,11 @@ class Board:
         self.values[4][4] = 1
         self.values[3][4] = -1
         self.values[4][3] = -1
+        print(type(self))
+
+    def display(self):
+        for i in self.values:
+            print(i)
 
     def count_zeros(self) -> int:
         count_zero = 0
@@ -35,7 +41,47 @@ class Board:
             return -1
         else:
             return 0
+
+
+    def count_reversible_rock(self, X, Y, player):
+        #入力の周りを判定
+        reverse_p = []
+        for i in range(-1,2):
+            if (X == 0 and i == -1) or (X == 7 and i == 1):
+                continue
+            for j in range(-1,2):
+                if not(Y == 0 and j == -1) and not(Y == 7 and j == 1):
+                    #判定した内容が相手か判定
+                    print(type(self))
+                    if self.values[X + i][Y + j] == -player:
+                        #相手だったらその先に自分の色の石があるか判定
+                        tmp = []
+                        #方向の先へ
+                        for g in range(1,8):
+                            #0 < 8 は壁の指定i*gでj*g斜めに行く、分からなかったら例示して
+                            if 0 < X + (i * g) < 7 and 0 < Y + (j * g) < 7:
+                                #斜めに行ってる途中で自分と同じ石があったら、
+                                if self.values[X + (i * g)][Y + (j * g)] == player:
+                                    #returnする配列に入れる
+                                    reverse_p += tmp
+                                    break
+                                #もしそうでなかったらtmpの配列にappend
+                                else:
+                                    tmp.append([X + (i * g) , Y + (j * g) ])
+        return reverse_p    
+
+    def count_put_able_spots(self, player):
+        count_reversible_rock_list = []
+        for l in range(0,8):
+            for m in range(0,8):
+                if len(Board.count_reversible_rock(self.values, l, m, player)) > 0:
+                    count_reversible_rock_list.append(Board.count_reversible_rock(self.values,l,m,player))
+        return len(count_reversible_rock_list)
         
-    def display(self):
-        for i in self.values:
-            print(i)
+    def reverse_rocks(reversible_rocks,self):
+        for i in reversible_rocks:
+            self[i[0]][i[1]] *= -1
+    
+    def input_rock(self, player):
+        input_rock = list(map(int,input(f"あなたは{player}です、石を置きたい場所を指定して下さい").split()))
+        return input_rock
