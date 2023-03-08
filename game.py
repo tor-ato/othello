@@ -2,16 +2,16 @@
 import random
 
 class Game:
-    def __init__(self) -> None:
-        pass
+    def __init__(self):
+        self.values = 0
 
     def coin_tos(self):
         if (random.randint(0, 1) == 1):
-            player = 1
+            self.values = 1
         else:
-            player = -1
-        return player
+            self.player = -1
+        return self.values
 
-    def change_player(self, player):
-        player = - player
-        return player
+    def change_player(self):
+        self.values = -self.values
+        return self.values

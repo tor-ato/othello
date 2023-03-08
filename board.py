@@ -1,4 +1,4 @@
-
+from game import Game
 
 class Board:
     def __init__(self):
@@ -10,7 +10,6 @@ class Board:
         self.values[4][4] = 1
         self.values[3][4] = -1
         self.values[4][3] = -1
-        print(type(self))
 
     def display(self):
         for i in self.values:
@@ -52,8 +51,7 @@ class Board:
             for j in range(-1,2):
                 if not(Y == 0 and j == -1) and not(Y == 7 and j == 1):
                     #判定した内容が相手か判定
-                    print(type(self))
-                    if self.values[X + i][Y + j] == -player:
+                    if self.values[X + i][Y + j] == - player:
                         #相手だったらその先に自分の色の石があるか判定
                         tmp = []
                         #方向の先へ
@@ -74,13 +72,14 @@ class Board:
         count_reversible_rock_list = []
         for l in range(0,8):
             for m in range(0,8):
-                if len(Board.count_reversible_rock(self.values, l, m, player)) > 0:
-                    count_reversible_rock_list.append(Board.count_reversible_rock(self.values,l,m,player))
+                if len(self.count_reversible_rock(l, m, player)) > 0:
+                    count_reversible_rock_list.append(self.count_reversible_rock(l, m, player))
         return len(count_reversible_rock_list)
         
-    def reverse_rocks(reversible_rocks,self):
+    def reverse_rocks(self, reversible_rocks):
+        print(f"reversible_rocks:{reversible_rocks}")
         for i in reversible_rocks:
-            self[i[0]][i[1]] *= -1
+            self.values[i[0]][i[1]] *= -1
     
     def input_rock(self, player):
         input_rock = list(map(int,input(f"あなたは{player}です、石を置きたい場所を指定して下さい").split()))
