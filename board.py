@@ -1,6 +1,7 @@
 from game import Game
 
 class Board:
+    #テストしなくていい
     def __init__(self):
         self.values = []
         for _ in range(8):
@@ -10,6 +11,7 @@ class Board:
         self.values[4][4] = 1
         self.values[3][4] = -1
         self.values[4][3] = -1
+
 
     def display(self):
         for i in self.values:
@@ -21,6 +23,7 @@ class Board:
             for j in i:
                 if (j == 0):
                     count_zero += 1
+
         return count_zero
 
     
@@ -82,5 +85,4 @@ class Board:
             self.values[i[0]][i[1]] *= -1
     
     def input_rock(self, player):
-        input_rock = list(map(int,input(f"あなたは{player}です、石を置きたい場所を指定して下さい").split()))
-        return input_rock
+        return list(map(int,input(f"あなたは{player}です、石を置きたい場所を指定して下さい").split()))
