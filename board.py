@@ -69,6 +69,7 @@ class Board:
                                 #もしそうでなかったらtmpの配列にappend
                                 else:
                                     tmp.append([X + (i * g) , Y + (j * g) ])
+        print(f"reverse_p : {reverse_p}")
         return reverse_p    
 
     def count_put_able_spots(self, player):
@@ -78,9 +79,8 @@ class Board:
                 if len(self.count_reversible_rock(l, m, player)) > 0:
                     count_reversible_rock_list.append(self.count_reversible_rock(l, m, player))
         return len(count_reversible_rock_list)
-        
+
     def reverse_rocks(self, reversible_rocks):
-        print(f"reversible_rocks:{reversible_rocks}")
         for i in reversible_rocks:
             self.values[i[0]][i[1]] *= -1
     

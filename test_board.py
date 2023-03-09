@@ -54,10 +54,53 @@ def test_winner_judge():
     winner_one = board.winner_judge()
     assert winner_one == test_winner_one
 
+def test_count_reversible_rock():
+    board = Board()
+
+    excepted = [[3, 3]]
+
+    player = -1
+    X, Y = [2, 3]
+    actual = board.count_reversible_rock(X, Y, player)
+
+    assert excepted == actual
 
 
-    def test_input_rock(monkeypatch):
-        board = Board()
-        monkeypatch.setattr('sys.stdin', StringIO('3 4'))
 
-        assert board.input_rock() == [3, 4]
+def test_count_put_able_rocks():
+    board = Board()
+    player = -1
+
+    excepted = 4
+
+    actual = board.count_put_able_spots(player)
+
+    assert actual == excepted
+
+
+
+
+def test_revers_rocks():
+    board = Board()
+    reversible_rocks = [[3, 3]]
+    board.reverse_rocks(reversible_rocks)
+    excepted = -1
+    assert board.values[3][3] == excepted
+
+def test_input_rock(monkeypatch):
+    board = Board()
+    monkeypatch.setattr('sys.stdin', StringIO('3 4'))
+
+    player = 1
+
+    assert board.input_rock(player) == [3, 4]
+
+
+
+
+
+
+
+
+
+

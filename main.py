@@ -30,7 +30,7 @@ def main():
                 board.reverse_rocks(reversible_rocks)
                 
                 #プレイヤー交代
-                game.change_game()
+                game.change_player()
             elif len(reversible_rocks) == 0:
                 print("そこには置けません。適切な座標を指定してください。")
             
