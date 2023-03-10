@@ -12,7 +12,7 @@ def main():
     board.display()
     while True:
         #置ける場所が1個以上なら
-        if(board.count_put_able_spots(game.player) > 0):
+        if(board.is_continue(game.player) > 0):
             
             X, Y = board.input_rock(game.player)
             # display(board)     

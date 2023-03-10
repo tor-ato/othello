@@ -115,3 +115,6 @@ class Board:
     def input_rock(self, player):
         return list(map(int,input(f"あなたは{player}です、石を置きたい場所を指定して下さい").split()))
     
+    def is_continue(self, player):
+       return  (self.count_put_able_spots(player) > 0)
+    
