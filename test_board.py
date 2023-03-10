@@ -74,7 +74,7 @@ def test_count_put_able_rocks():
     excepted = 4
 
     actual = board.count_put_able_spots(player)
-
+    
     assert actual == excepted
 
 
