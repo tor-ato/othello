@@ -17,6 +17,7 @@ class Board:
         for i in self.values:
             print(i)
 
+
     def count_zeros(self) -> int:
         count_zero = 0
         for i in self.values:
@@ -79,21 +80,19 @@ class Board:
                         continue
 
                     #斜めに行ってる途中で自分違う石があったら、その石の情報をtmpに追加
-                    print(f"X, Y: {X}, {Y}")
-                    print(f"self.values X + (i * g),  Y + (j * g) : {X + (i * g)} {Y + (j * g)}")
-                    print(f"self.values[X + (i * g)][Y + (j * g)] : {self.values[X + (i * g)][Y + (j * g)]}")
-                    if self.values[X + (i * g)][Y + (j * g)] == player:
+                    if self.values[X + (i * g)][Y + (j * g)] == -player:
+
                         tmp.append([X + (i * g) , Y + (j * g) ])
-                        print(f"reverse_p2 : {reverse_p}")
                     
-                    else:
+                    elif self.values[X + (i * g)][Y + (j * g)] == player and tmp != []:
                         #returnする配列に入れる
-                        print(f"reverse_p1 : {reverse_p}")
                         reverse_p += tmp
+                        break
+
+                    else:
                         break
                         
 
-        print(f"reverse_p : {reverse_p}")
 
         return reverse_p   
 
@@ -104,7 +103,7 @@ class Board:
         for l in range(0,8):
             for m in range(0,8):
                 if len(self.count_reversible_rock(l, m, player)) > 0:
-                    count_reversible_rock_list.append(self.count_reversible_rock(l, m, player))
+                    count_reversible_rock_list.append(self.count_reversible_rock(l, m, player))       
         return len(count_reversible_rock_list)
     
 
@@ -115,3 +114,4 @@ class Board:
     
     def input_rock(self, player):
         return list(map(int,input(f"あなたは{player}です、石を置きたい場所を指定して下さい").split()))
+    

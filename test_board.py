@@ -1,4 +1,5 @@
 from board import Board
+from game import Game
 from io import StringIO
 import sys
 import io
@@ -10,6 +11,7 @@ def test___init__():
     assert board.values[4][4] == 1
     assert board.values[3][4] == -1
     assert board.values[4][3] == -1
+
 
 def test_display():
     board = Board()
@@ -36,6 +38,7 @@ def test_board_count_zeros():
     actual = board.count_zeros()
     assert expected == actual
 
+
 def test_winner_judge():
     board = Board()
 
@@ -54,6 +57,7 @@ def test_winner_judge():
     winner_one = board.winner_judge()
     assert winner_one == test_winner_one
 
+
 def test_count_reversible_rock():
     board = Board()
 
@@ -64,7 +68,6 @@ def test_count_reversible_rock():
     actual = board.count_reversible_rock(X, Y, player)
 
     assert excepted == actual
-
 
 
 def test_count_put_able_rocks():
@@ -78,14 +81,13 @@ def test_count_put_able_rocks():
     assert actual == excepted
 
 
-
-
 def test_revers_rocks():
     board = Board()
     reversible_rocks = [[3, 3]]
     board.reverse_rocks(reversible_rocks)
     excepted = -1
     assert board.values[3][3] == excepted
+
 
 def test_input_rock(monkeypatch):
     board = Board()
