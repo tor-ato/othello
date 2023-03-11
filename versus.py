@@ -12,3 +12,5 @@ class Playler:
     
     def strong_computer(self):
         Board.put_rock()
+
+

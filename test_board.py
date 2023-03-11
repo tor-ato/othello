@@ -73,9 +73,7 @@ def test_count_reversible_rock():
 def test_count_put_able_rocks():
     board = Board()
     player = -1
-
     excepted = 4
-
     actual = board.count_put_able_spots(player)
     
     assert actual == excepted
@@ -92,17 +90,10 @@ def test_revers_rocks():
 def test_input_rock(monkeypatch):
     board = Board()
     monkeypatch.setattr('sys.stdin', StringIO('3 4'))
-
     player = 1
-
     assert board.input_rock(player) == [3, 4]
 
-
-
-
-
-
-
-
+def test_is_continue():
+    return
 
 
