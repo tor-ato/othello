@@ -107,10 +107,13 @@ class Board:
     def reverse_rocks_around_you_put(self, reversible_rocks):
         for i in reversible_rocks:
             self.values[i[0]][i[1]] *= -1
+
     
     
     def input_rock(self, player):
-        return list(map(int,input(f"あなたは{player}です、石を置きたい場所を指定して下さい").split()))
+        x, y = list(map(int,input(f"あなたは{player}です、石を置きたい場所を指定して下さい").split()))
+        putable = self.count_reversible_rocks_around_sopt(x, y, player) > 0
+        return  x, y, putable
     
     
     def is_continue(self, player):
@@ -130,14 +133,13 @@ class Board:
     def vs_player_has_no_place_to_put(self, player):
         return self.count_put_able_spots_on_board(-player) == 0
     
-    
-    def there_are_place_to_put(self, x, y, player):
-        print(f"self.count_reversible_rocks_around_sopt(x, y, player) : {self.count_reversible_rocks_around_sopt(x, y, player)}")
-        return self.count_reversible_rocks_around_sopt(x, y, player) > 0
-    
     def reverse_rock_where_you_put(self, x, y, player):
-        self.values[x][y] = -player
+        self.values[x][y] = player
 
+    def reverse_rocks(self, X, Y, player):
+        reversible_rocks_list = self.reversible_rock_list_around_where_you_specified(X, Y, player)
+        self.reverse_rock_where_you_put(X, Y, player)
+        self.reverse_rocks_around_you_put(reversible_rocks_list)
 
 
     
