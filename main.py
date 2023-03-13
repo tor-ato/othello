@@ -8,9 +8,9 @@ def main():
     game.coin_tos()
 
     board.display()
-    
+
     while True:
-        if board.is_continue(game.player):
+        if board.can_continue(game.player):
             
             X, Y, putable = board.input_rock(game.player)
 
@@ -23,7 +23,7 @@ def main():
             
             board.display()
 
-            if board.board_is_full():
+            if board.is_full():
                 board.winner_judge()
 
         else:
