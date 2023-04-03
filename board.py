@@ -1,16 +1,14 @@
-from game import Game
 
 class Board:
     def __init__(self):
         self.values = []
         for _ in range(8):
             self.values.append([0]*8)
-        
         self.values[3][3] = 1
         self.values[4][4] = 1
         self.values[3][4] = -1
         self.values[4][3] = -1
-
+        
         self.winner = 0
 
 
@@ -57,7 +55,7 @@ class Board:
             # 0 and -1 か 7 and 1 ならforループをスキップ
             if (X == 0 and i == -1) or (X == 7 and i == 1):
                 continue
-            
+        
             for j in range(-1,2):
 
                 # 0 and -1 か 7 and 1 ならforループをスキップ
@@ -91,13 +89,37 @@ class Board:
                         break
         return reverse_p
         
-    def _count_put_able_spots_on_board(self, player):
-        reversible_rock_list_on_board = []
+    # def count_put_able_spots_on_board(self, player):
+    #     reversible_rock_list_on_board = []
+    #     for l in range(0, 8):
+    #         for m in range(0, 8):
+    #             if self._count_reversible_rocks_around_sopt(l, m, player) > 0:
+    #                 reversible_rock_list_on_board.append(self._reversible_rock_list_around_where_you_specified(l, m, player))       
+    #     return len(reversible_rock_list_on_board)
+    
+    # 新しく作った方
+    def count_put_able_spots_on_board(self, player):
+        put_able_spots = []
         for l in range(0, 8):
             for m in range(0, 8):
-                if self._count_reversible_rocks_around_sopt(l, m, player) > 0:
-                    reversible_rock_list_on_board.append(self._reversible_rock_list_around_where_you_specified(l, m, player))       
-        return len(reversible_rock_list_on_board)
+                if self._count_reversible_rocks_around_sopt(l, m, player) == 0:
+                    continue
+                if len(self._reversible_rock_list_around_where_you_specified(l, m, player)) > 0:
+                    put_able_spots.append([l, m])    
+        return len(put_able_spots)
+    
+    def putable_spots_on_board(self, player):
+        put_able_spots = []
+        for l in range(0, 8):
+            for m in range(0, 8):
+                if self._count_reversible_rocks_around_sopt(l, m, player) == 0:
+                    continue
+                if len(self._reversible_rock_list_around_where_you_specified(l, m, player)) > 0:
+                    put_able_spots.append([l, m])
+        return put_able_spots
+    
+
+
     
 
     def _count_reversible_rocks_around_sopt(self, x, y, player):
@@ -117,7 +139,7 @@ class Board:
     
     
     def can_continue(self, player):
-       return  (self._count_put_able_spots_on_board(player) > 0)
+       return  self.count_put_able_spots_on_board(player) > 0
     
     
     def is_full(self):
@@ -130,8 +152,8 @@ class Board:
         print(f"ゲーム終了勝者{self.winner}")
 
     
-    def vs_player_has_no_place_to_put(self, player):
-        return self._count_put_able_spots_on_board(-player) == 0
+    def vs_player_has_no_place_to_put(self, player_one, player_two):
+        return self.count_put_able_spots_on_board(player_one) == 0 and self.count_put_able_spots_on_board(player_two) == 0
     
     def _reverse_rock_where_you_put(self, x, y, player):
         self.values[x][y] = player
