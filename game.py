@@ -3,101 +3,58 @@ import random
 from board import Board
 
 class Game:
-    def __init__(self):
-        self.player_one = Human()
-        self.player_two = Human()
-        self.playable_player = 1
-        self.player_one_black_or_white = 0
-        self.player_two_black_or_white = 0
+    def __init__(self, player_one_type: str):
+        player_one_color, player_two_color = self.coin_tos()
+        if player_one_type not in  ('cmp', 'hum'):
+            raise TypeError("Please choose a valid opponent: 'cmp' or 'hum'.")
+        if player_one_type == 'cmp':
+            self.player_one = VsPlayer(Computer(), player_one_color)
+        if player_one_type == 'hum':
+            self.player_one = VsPlayer(Human(), player_one_color)
+        self.player_two = VsPlayer(Human(), player_two_color)
+        self.playable_player = self.player_one
 
 
     def coin_tos(self):
-        self.player_one_black_or_white = random.randrange(-1, 2, 2)
-        self.player_two_black_or_white = -self.player_one_black_or_white
-         
+        player_one_color = random.randrange(-1, 2, 2)
+        player_two_color = -player_one_color
+        return player_one_color, player_two_color
 
+    @property
     def change_player(self):
-        if self.playable_player == 1:
-            self.playable_player = 2
-        else:
-            self.playable_player = 1
+        self.playable_player = self.player_two if self.playable_player == self.player_one else self.player_one    
 
-    
-    def chose_player(self):
-       
-       self.chose_vs = True
-
-       while self.chose_vs == True:
-            print("コンピュータと対戦したい場合はcmp,人間と対戦したい場合はhumを選択してください。")
-            self.computer_or_human = input()
-
-            if self.computer_or_human == "cmp":
-                self.vs_player = VsPlayer()
-                self.vs_player.change_to_computher()
-                
-                break
-
-            elif self.computer_or_human == "hum":
-                self.vs_player = VsPlayer()
-                self.vs_player.change_to_human()
-
-                break
-
-            else:
-                print("正しい対戦相手を選択してください。")
-                continue      
-
-       return self.vs_player
-    
 
 class VsPlayer:
-    def __init__(self):
-        self.player_instance = Human()
+    def __init__(self, player_instance, player_color):
+        self.player_instance = player_instance
+        self.__black_or_white = player_color
 
-    def chose_place_to_put(self, player, board: Board):
-        return self.player_instance.chose_place_to_put(player, board)
 
-    def change_to_computher(self):
-        self.player_instance = Computer()
+    @property
+    def black_or_white(self):
+        return self.__black_or_white
 
-    def change_to_human(self):
-        self.player_instance = Human()
+
+    def choose_spot_to_put(self, black_or_white, board: Board):
+        return self.player_instance.choose_spot_to_put(black_or_white, board)
 
 
 class Computer:
-    def __init__(self) -> None:
-        black_or_white = 0
+    def __init__(self):
+        pass
 
-    def chose_place_to_put(self, player, board: Board):
-        k = random.randint(0, board.count_put_able_spots_on_board(player)-1)
-        chosen_spot = board.putable_spots_on_board(player)
-        print(f'chosen_spot[k][0], chosen_spot[k][1] : {chosen_spot[k][0]} , {chosen_spot[k][1]}')
-        re_list = [chosen_spot[k][0], chosen_spot[k][1], player]
-        print(f're_list : {re_list}')
-        return re_list
 
-    # ↓構造
-    # [
-    #     [
-    #         [3, 3]
-    #     ], 
-    #     [
-    #         [3, 3]
-    #     ], 
-    #     [
-    #         [4, 4]
-    #     ], 
-    #     [
-    #         [4, 4]
-    #     ]
-    # ]
+    def choose_spot_to_put(self, black_or_white, board: Board):
+        index = random.randint(0, board.count_put_able_spots_on_board(black_or_white)-1)
+        chosen_spot = board.putable_spots_on_board(black_or_white)[index]
+        return [chosen_spot[0], chosen_spot[1], black_or_white]
 
-class Human():
-    def __init__(self) -> None:
-        black_or_white = 0
 
-    def chose_place_to_put(self, player , board: Board):
-        return  board.input_rock(player)
-    
+class Human:
+    def __init__(self):
+        pass
 
-    
+
+    def choose_spot_to_put(self, black_or_white, board: Board):
+        return  board.input_rock(black_or_white)

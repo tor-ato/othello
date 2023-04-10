@@ -1,167 +1,112 @@
 
 class Board:
-    def __init__(self):
-        self.values = []
-        for _ in range(8):
-            self.values.append([0]*8)
-        self.values[3][3] = 1
-        self.values[4][4] = 1
-        self.values[3][4] = -1
-        self.values[4][3] = -1
-        
+    def __init__(self):     
+        self.values = [[0] * 8 for _ in range(8)]
+        self.values[3][3:5] = 1, -1
+        self.values[4][3:5] = -1, 1
         self.winner = 0
 
-
-
+    @property
     def display(self):
-        for i in self.values:
-            print(i)
+        for row in self.values:
+            print(row)    
 
-
+    @property
     def _count_zeros(self) -> int:
-        count_zero = 0
-        for i in self.values:
-            for j in i:
-                if (j == 0):
-                    count_zero += 1
+        return sum(row.count(0) for row in self.values)
 
-        return count_zero
-
-    
+    @property
     def winner_judge(self):
-        one_count = 0
-        minus_one_count = 0
-        for i in self.values:
-            for j in i:
-                if(j == 1):
-                    one_count += 1
-                elif (j == -1):
-                    minus_one_count += 1
-        
-        if one_count > minus_one_count:
+        count = self._count_stones
+        if count[1] > count[-1]:
             self.winner = 1 
-        elif minus_one_count > one_count:
+        elif count[-1] > count[1]:
             self.winner = -1
         else:
             self.winner = 0
 
+    @property
+    def _count_stones(self) -> dict:
+        count = {1: 0, -1: 0, 0: 0}
+        for i in self.values:
+            for j in i:
+                count[j] += 1
+        return count
 
-    def _reversible_rock_list_around_where_you_specified(self, X, Y, player):
-        #入力の周りを判定
-        reverse_p = []
 
-        for i in range(-1,2):
-
-            # 0 and -1 か 7 and 1 ならforループをスキップ
-            if (X == 0 and i == -1) or (X == 7 and i == 1):
-                continue
-        
-            for j in range(-1,2):
-
-                # 0 and -1 か 7 and 1 ならforループをスキップ
-                if (Y == 0 and j == -1) or (Y == 7 and j == 1):
+    def _reversible_rock_list_around_where_you_specified(self, x, y, black_or_white):
+        reversible_rocks = []
+        for i in range(max(0, x-1), min(8, x+2)):
+            for j in range(max(0, y-1), min(8, y+2)):
+                if self.values[i][j] == black_or_white:
                     continue
-                
-                # 石が自分の石の場合はforループをスキップ
-                if self.values[X + i][Y + j] ==  player:
-                    continue
-                
-                #self.values[X + i][Y + j]が相手だったら
-                tmp = []
-                
-                #方向の先へ進む
-                for g in range(1, 8):
-
-                    #0 < 8 は壁の指定i*gでj*g斜めに行く、分からなかったら例示して
-                    if not( 0 < X + (i * g) < 7 and 0 < Y + (j * g) < 7):
-                        continue
-
-                    #斜めに行ってる途中で自分違う石があったら、その石の情報をtmpに追加
-                    if self.values[X + (i * g)][Y + (j * g)] == -player:
-                        tmp.append([X + (i * g) , Y + (j * g) ])
-                    
-                    elif self.values[X + (i * g)][Y + (j * g)] == player and tmp != []:
-                        #returnする配列に入れる
-                        reverse_p += tmp
-                        break
-
-                    else:
-                        break
-        return reverse_p
-        
-    # def count_put_able_spots_on_board(self, player):
-    #     reversible_rock_list_on_board = []
-    #     for l in range(0, 8):
-    #         for m in range(0, 8):
-    #             if self._count_reversible_rocks_around_sopt(l, m, player) > 0:
-    #                 reversible_rock_list_on_board.append(self._reversible_rock_list_around_where_you_specified(l, m, player))       
-    #     return len(reversible_rock_list_on_board)
+                if self.values[i][j] == -black_or_white:
+                    tmp_rocks = [[i, j]]
+                    for g in range(2, 8):
+                        x_ = x + (i-x)*g
+                        y_ = y + (j-y)*g
+                        if not(0 <= x_ < 8 and 0 <= y_ < 8):
+                            break
+                        if self.values[x_][y_] == -black_or_white:
+                            tmp_rocks.append([x_, y_])
+                        elif self.values[x_][y_] == black_or_white:
+                            reversible_rocks += tmp_rocks
+                            break
+                        else:
+                            break
+        return reversible_rocks
     
-    # 新しく作った方
-    def count_put_able_spots_on_board(self, player):
+    def count_put_able_spots_on_board(self, black_or_white):
+        return len(self.putable_spots_on_board(black_or_white))
+    
+    def putable_spots_on_board(self, black_or_white):
         put_able_spots = []
         for l in range(0, 8):
             for m in range(0, 8):
-                if self._count_reversible_rocks_around_sopt(l, m, player) == 0:
+                if self._count_reversible_rocks_around_sopt(l, m, black_or_white) == 0:
                     continue
-                if len(self._reversible_rock_list_around_where_you_specified(l, m, player)) > 0:
-                    put_able_spots.append([l, m])    
-        return len(put_able_spots)
-    
-    def putable_spots_on_board(self, player):
-        put_able_spots = []
-        for l in range(0, 8):
-            for m in range(0, 8):
-                if self._count_reversible_rocks_around_sopt(l, m, player) == 0:
-                    continue
-                if len(self._reversible_rock_list_around_where_you_specified(l, m, player)) > 0:
+                if len(self._reversible_rock_list_around_where_you_specified(l, m, black_or_white)) > 0:
                     put_able_spots.append([l, m])
         return put_able_spots
-    
 
 
-    
-
-    def _count_reversible_rocks_around_sopt(self, x, y, player):
-        return len(self._reversible_rock_list_around_where_you_specified(x, y, player))
+    def _count_reversible_rocks_around_sopt(self, x, y, black_or_white):
+        return len(self._reversible_rock_list_around_where_you_specified(x, y, black_or_white))
     
 
     def _reverse_rocks_around_you_put(self, reversible_rocks):
-        for i in reversible_rocks:
-            self.values[i[0]][i[1]] *= -1
-
+        for rock in reversible_rocks:
+            row, col = rock
+            self.values[row][col] *= -1
     
-    
-    def input_rock(self, player):
-        x, y = list(map(int,input(f"あなたは{player}です、石を置きたい場所を指定して下さい").split()))
-        putable = self._count_reversible_rocks_around_sopt(x, y, player) > 0
+    def input_rock(self, black_or_white):
+        x, y = list(map(int,input(f"あなたは{black_or_white}です、石を置きたい場所を指定して下さい").split()))
+        putable = self._count_reversible_rocks_around_sopt(x, y, black_or_white) > 0
         return  x, y, putable
     
     
-    def can_continue(self, player):
-       return  self.count_put_able_spots_on_board(player) > 0
+    def can_continue(self, black_or_white):
+       return  self.count_put_able_spots_on_board(black_or_white) > 0
     
-    
+    @property
     def is_full(self):
-        amount_of_zeros_on_board = self._count_zeros()
-        return amount_of_zeros_on_board == 0
+        return self._count_zeros == 0
     
-    
+    @property
     def print_winner(self):
-        self.winner_judge()
+        self.winner_judge
         print(f"ゲーム終了勝者{self.winner}")
 
     
-    def vs_player_has_no_place_to_put(self, player_one, player_two):
-        return self.count_put_able_spots_on_board(player_one) == 0 and self.count_put_able_spots_on_board(player_two) == 0
+    def vs_player_has_no_place_to_put(self, player_one_black_or_white, player_two_black_or_white):
+        return all(self.count_put_able_spots_on_board(player_black_or_white) == 0 for player_black_or_white in [player_one_black_or_white, player_two_black_or_white])
     
-    def _reverse_rock_where_you_put(self, x, y, player):
-        self.values[x][y] = player
 
-    def reverse_rocks(self, X, Y, player):
-        reversible_rocks_list = self._reversible_rock_list_around_where_you_specified(X, Y, player)
-        self._reverse_rock_where_you_put(X, Y, player)
+    def _reverse_rock_where_you_put(self, x, y, black_or_white):
+        self.values[x][y] = black_or_white
+
+
+    def reverse_rocks(self, x, y, black_or_white):
+        reversible_rocks_list = self._reversible_rock_list_around_where_you_specified(x, y, black_or_white)
+        self._reverse_rock_where_you_put(x, y, black_or_white)
         self._reverse_rocks_around_you_put(reversible_rocks_list)
-
-
-    
